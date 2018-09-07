@@ -50,6 +50,9 @@ def init(config, path, venv_name):
     try:
         config.action_plugin.create_directory(path)
         config.action_plugin.create_venv(app_name=venv_name)
+        cmd = ['which', 'python', '-v']
+        config.action_plugin.execute_command_in_venv(cmd)
+        config.action_plugin.run_command(cmd)
     except Exception as e:
         print ("Failed : Exception %s" % e)
         if config.debug:

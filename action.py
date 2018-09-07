@@ -84,6 +84,7 @@ class Action(object):
 
     def create_venv(self, app_name='.venv'):
         venv_abspath = os.path.abspath(os.path.join(self._path, app_name))
+        self._venv = venv_abspath
         if os.path.exists(venv_abspath):
            self._log(level=1, msg="venv exists : %s" % venv_abspath)
            return
@@ -94,9 +95,26 @@ class Action(object):
             rc = self.run_command(cmd)
             self._log(level=0, msg=rc)
             self._log(level=1, msg="venv created : %s" % venv_abspath)
+            return rc
         except Exception as e:
+            self._venv = None
             traceback.print_exc()
             raise e
+
+    def execute_command_in_venv(self, cmd):
+        venv_path = self._venv
+        if venv_path is None:
+            self._log(level=1, msg="venv is not yet created")
+        venv_bin_path = os.path.join(venv_path, 'bin')
+      
+        old_env_vals = {}
+        old_env_vals['PATH'] = os.environ['PATH']
+        os.environ['PATH'] = "%s:%s" % (venv_bin_path, os.environ['PATH'])
+        rc = self.run_command(cmd)
+        self._log(level=0, msg=rc)
+        os.environ['PATH'] = old_env_vals['PATH']
+        return rc
+
 
 
 
