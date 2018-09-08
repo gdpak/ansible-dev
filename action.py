@@ -9,6 +9,7 @@ if sys.version_info[0] == 2:
 else:
    def b(s):
       return s.encode("latin-1")
+from utils.system import get_bin_path
 
 class Action(object):
     def __init__(self, verbose=False):
@@ -83,6 +84,8 @@ class Action(object):
             raise e
 
     def create_venv(self, app_name='.venv'):
+        venv_bin_path = get_bin_path('virtualenv')
+        self._log(level=0, msg="virtualenv path : %s" % venv_bin_path)
         venv_abspath = os.path.abspath(os.path.join(self._path, app_name))
         self._venv = venv_abspath
         if os.path.exists(venv_abspath):
@@ -93,7 +96,7 @@ class Action(object):
             self._change_root_work_directory()
             cmd = ['virtualenv', app_name]
             rc = self.run_command(cmd)
-            self._log(level=0, msg=rc)
+            self._log(level=0, msg="run_command : rc=%s" % rc)
             self._log(level=1, msg="venv created : %s" % venv_abspath)
             return rc
         except Exception as e:

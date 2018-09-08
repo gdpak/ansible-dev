@@ -14,10 +14,10 @@ pass_config = click.make_pass_decorator(Config)
 @click.option('--debug', '-d', is_flag=True, help='Enables debug mode')
 @click.pass_context
 def cli(ctx, verbose, debug):
-    """ansible-dev is a comman line tool for getting started with
+    """ansible-dev is a command line tool for getting started with
     ansible.
-    It does all prerequisite for running ansible and start
-    initial template plalybook and roles
+    It does all prerequisite for running ansible and starts
+    initial template for plalybook and roles
     """
     ctx.obj = Config()
     ctx.obj.verbose = verbose
@@ -31,7 +31,7 @@ def cli(ctx, verbose, debug):
 @pass_config
 def init(config, path, venv_name):
     """
-    Initialize the environment for ansible in given path
+    Initialize the environment for ansible in a given directory path
     
     Usage: ansible-dev init <path>
     """
