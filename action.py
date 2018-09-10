@@ -83,6 +83,9 @@ class Action(object):
 
             cmd.stdout.close()
             cmd.stderr.close()
+            if cmd.returncode:
+                self._log(level=0, msg="cmd:%s failed. stdout: %s stderr: %s" %
+                        (args, stdout, stderr))
             return (cmd.returncode, stdout)
 
         except (OSError, IOError) as e:
@@ -95,7 +98,17 @@ class Action(object):
         except (OSError, IOError) as e:
             raise e
 
-    def create_venv(self, app_name='.venv'):
+    def _check_cmd_rc(self, rc, stdout=None):
+        if rc:
+            if stdout:
+                # rc non-zero means some error
+                raise ValueError(stdout)
+            else:
+                raise ValueError(str(rc))
+        else:
+            return (rc, stdout)
+
+    def create_venv(self, app_name='.venv', py_version=None):
         venv_bin_path = get_bin_path('virtualenv')
         self._log(level=1, msg="Executing virtualenv from : %s" % venv_bin_path)
         venv_abspath = os.path.abspath(os.path.join(self._path, app_name))
@@ -106,14 +119,24 @@ class Action(object):
 
         try:
             self._change_root_work_directory()
-            cmd = ['virtualenv', app_name]
-            rc = self.run_command(cmd)
-            self._log(level=2, msg="run_command : rc=%s" % rc)
+            # Find active python version
+            cmd = ['python', '--version']
+            rc, sys_py_ver = self.run_command(cmd)
+            rc, sys_py_ver = self._check_cmd_rc(rc, sys_py_ver)
+            if sys_py_ver.find(py_version) != -1:
+                cmd = ['virtualenv', app_name]
+            else:
+                py_ver = 'python' + py_version
+                cmd = ['virtualenv', '-p', py_ver, app_name]
+            rc, stdout = self.run_command(cmd)
+            rc, stdout = self._check_cmd_rc(rc, stdout)
+            self._log(level=2, msg="run_command : rc=%d" % rc)
             self._log(level=1, msg="venv created : %s" % venv_abspath)
             return self._venv
         except Exception as e:
             self._venv = None
-            traceback.print_exc()
+            if self._verbose > 0:
+                traceback.print_exc()
             raise e
 
     def execute_command_in_venv(self, cmd):
@@ -125,10 +148,11 @@ class Action(object):
         old_env_vals = {}
         old_env_vals['PATH'] = os.environ['PATH']
         os.environ['PATH'] = "%s:%s" % (venv_bin_path, os.environ['PATH'])
-        rc = self.run_command(cmd)
+        rc, stdout = self.run_command(cmd)
+        rc, stdout = self._check_cmd_rc(rc, stdout)
         self._log(level=2, msg=rc)
         os.environ['PATH'] = old_env_vals['PATH']
-        return rc
+        return rc, stdout
 
     def clone_git_repo(self, repo, version):
         git_path = get_bin_path('git')
@@ -140,13 +164,15 @@ class Action(object):
 
         try:
             self._change_root_work_directory()
-            rc = self.run_command(cmd)
+            rc, stdout = self.run_command(cmd)
+            rc, stdout = self._check_cmd_rc(rc, stdout)
             self._log(level=2, msg="run_command : cmd=%s rc=%s" % (cmd, rc))
             self._log(level=1, msg="ansible repo created at : %s" % ansible_dest)
             return (ansible_dest)
         except Exception as e:
             self._ansible_path = None
-            traceback.print_exc()
+            if self._verbose > 0:
+                traceback.print_exc()
             raise e
 
     def install_repo_dependancies_in_venv(self, repo_path):
@@ -159,12 +185,14 @@ class Action(object):
 
         cmd = ['pip', 'install' , '-r', 'requirements.txt']
         try:
-            rc = self.execute_command_in_venv(cmd)
+            rc, stdout = self.execute_command_in_venv(cmd)
+            rc, stdout = self._check_cmd_rc(rc, stdout)
             self._log(level=2, msg="run_command : cmd=%s rc=%s" % (cmd, rc))
             self._log(level=1, msg="repo: %s Dependancies installed" % repo_path)
             return rc
         except Exception as e:
-            traceback.print_exc()
+            if self._verbose > 0:
+                traceback.print_exc()
             raise e
 
     def activate_ansible_in_venv(self, ansible_path):
@@ -175,14 +203,21 @@ class Action(object):
         except (OSError, IOError) as e:
             raise e
 
+        # Prerequisite to do make install of ansible. Install packaging
+        cmd = ['pip', 'install', 'packaging']
+        rc, stdout = self.execute_command_in_venv(cmd)
+        rc, stdout = self._check_cmd_rc(rc, stdout)
+
         cmd = ['make', 'install']
         try:
-            rc = self.execute_command_in_venv(cmd)
+            rc, stdout = self.execute_command_in_venv(cmd)
+            rc, stdout = self._check_cmd_rc(rc, stdout)
             self._log(level=2, msg="run_command : cmd=%s rc=%s" % (cmd, rc))
             self._log(level=0, msg="Ansible installed from :%s" % ansible_path)
             return rc
         except Exception as e:
-            traceback.print_exc()
+            if self._verbose > 0:
+                traceback.print_exc()
             raise e
 
     def print_ansible_version(self, ansible_path):
@@ -196,7 +231,9 @@ class Action(object):
         cmd = ['ansible', '--version']
         try:
             rc, out = self.execute_command_in_venv(cmd)
+            rc, stdout = self._check_cmd_rc(rc, stdout)
             self._log(level=2, msg="run_command : cmd=%s rc=%s" % (cmd, rc))
             return out
         except Exception as e:
-            traceback.print_exc()
+            if self._verbose > 0:
+                traceback.print_exc()

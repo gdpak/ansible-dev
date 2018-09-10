@@ -11,10 +11,10 @@ class Config(object):
 pass_config = click.make_pass_decorator(Config)
 
 @click.group()
-@click.option('--verbose', '-v', count=True, help='Enables verbose mode')
-@click.option('--debug', '-d', is_flag=True, help='Enables debug mode')
+@click.option('--verbose', '-v', count=True, help='Enables'
+        ' verbose mode')
 @click.pass_context
-def cli(ctx, verbose, debug):
+def cli(ctx, verbose):
     """ansible-dev is a command line tool for getting started with
     ansible.
     It does all prerequisite for running ansible and starts
@@ -22,19 +22,20 @@ def cli(ctx, verbose, debug):
     """
     ctx.obj = Config()
     ctx.obj.verbose = verbose
-    ctx.obj.debug = debug
     ctx.obj.action_plugin = Action(verbose)
 
 @cli.command()
-@click.option('--venv-name', default='.venv',
+@click.option('--venv-name', '-vname', default='.venv',
               type=click.STRING, help='Name to create virtualenv')
-@click.option('--ansible-version', default='devel',
+@click.option('--ansible-version', '-ver', default='devel',
               type=click.STRING, help='ansible version to checkout')
-@click.option('--ansible-repo', default='https://github.com/ansible/ansible.git',
-              type=click.STRING, help='ansible version to checkout')
+@click.option('--ansible-repo', '-repo', default='https://github.com/ansible/ansible.git',
+              type=click.STRING, help='ansible repo to checkout')
+@click.option('--python-version', '-py', default='2.7',
+              type=click.STRING, help='ansible repo to checkout')
 @click.argument('path', type=click.Path())
 @pass_config
-def init(config, path, venv_name, ansible_version, ansible_repo):
+def init(config, path, venv_name, ansible_version, ansible_repo, python_version):
     """
     Initialize the environment for ansible in a given directory path
     
@@ -55,7 +56,8 @@ def init(config, path, venv_name, ansible_version, ansible_repo):
         click.echo("Step 1/6: create workspace directory")
         config.action_plugin.create_directory(path)
         click.echo("Step 2/6: create Virtual Environment")
-        venv_path = config.action_plugin.create_venv(app_name=venv_name)
+        venv_path = config.action_plugin.create_venv(app_name=venv_name,
+            py_version=python_version)
         click.echo("Step 3/6: clone ansible git repo")
         ansible_path = config.action_plugin.clone_git_repo(
             ansible_repo, ansible_version)
@@ -68,7 +70,8 @@ def init(config, path, venv_name, ansible_version, ansible_repo):
         click.echo(out)
         click.echo("Init Success: Ansible virtual env is ready at : %s" % venv_path)
     except Exception as e:
-        print ("Failed : Exception %s" % e)
-        if config.debug:
+        print ('Failed : Exception %s, run with -vv option to show full'
+            ' traceback' % e)
+        if config.verbose > 1:
             traceback.print_exc()
         return
