@@ -231,7 +231,7 @@ class Action(object):
         cmd = ['ansible', '--version']
         try:
             rc, out = self.execute_command_in_venv(cmd)
-            rc, stdout = self._check_cmd_rc(rc, stdout)
+            rc, out = self._check_cmd_rc(rc, out)
             self._log(level=2, msg="run_command : cmd=%s rc=%s" % (cmd, rc))
             return out
         except Exception as e:

@@ -19,6 +19,9 @@ def cli(ctx, verbose):
     ansible.
     It does all prerequisite for running ansible and starts
     initial template for plalybook and roles
+
+    See 'ansible-dev <command> --help' for more information on a specific
+    command
     """
     ctx.obj = Config()
     ctx.obj.verbose = verbose
@@ -30,9 +33,9 @@ def cli(ctx, verbose):
 @click.option('--ansible-version', '-ver', default='devel',
               type=click.STRING, help='ansible version to checkout')
 @click.option('--ansible-repo', '-repo', default='https://github.com/ansible/ansible.git',
-              type=click.STRING, help='ansible repo to checkout')
+              type=click.STRING, help='URL of ansible repo to checkout')
 @click.option('--python-version', '-py', default='2.7',
-              type=click.STRING, help='ansible repo to checkout')
+              type=click.STRING, help='python version for ansible')
 @click.argument('path', type=click.Path())
 @pass_config
 def init(config, path, venv_name, ansible_version, ansible_repo, python_version):
@@ -45,7 +48,7 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
         click.echo("Usage: ansible-dev init <path>")
         return
 
-    click.echo('Start: Init at %s ' % path, color=Fore.GREEN)
+    click.secho('Start: Init at %s ' % path, fg='green')
     
     if config.verbose > 1:
         click.echo("Init args: path=%s, venv_name=%s" % (path, venv_name))
@@ -58,17 +61,18 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
         click.echo("Step 2/6: create Virtual Environment")
         venv_path = config.action_plugin.create_venv(app_name=venv_name,
             py_version=python_version)
-        click.echo("Step 3/6: clone ansible git repo")
+        click.secho("Step 3/6: clone ansible git repo") 
         ansible_path = config.action_plugin.clone_git_repo(
             ansible_repo, ansible_version)
-        click.echo("Step 4/6: Install ansible Dependencies in virtial env")
+        click.secho("Step 4/6: Install ansible Dependencies in virtial env")
         config.action_plugin.install_repo_dependancies_in_venv(ansible_path)
-        click.echo("Step 5/6: Install ansible in virtual-env")
+        click.secho("Step 5/6: Install ansible in virtual-env")
         config.action_plugin.activate_ansible_in_venv(ansible_path)
         click.echo("Step 6/6: Checking ansible installation in virtial env")
         out = config.action_plugin.print_ansible_version(ansible_path)
         click.echo(out)
-        click.echo("Init Success: Ansible virtual env is ready at : %s" % venv_path)
+        click.secho("Init Success: Ansible virtual env is ready at : %s" %
+                    path, fg='green', bold='True')
     except Exception as e:
         print ('Failed : Exception %s, run with -vv option to show full'
             ' traceback' % e)
