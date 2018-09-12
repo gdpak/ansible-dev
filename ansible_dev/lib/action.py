@@ -9,7 +9,7 @@ if sys.version_info[0] == 2:
 else:
    def b(s):
       return s.encode("latin-1")
-from utils.system import get_bin_path
+from ansible_dev.utils.system import get_bin_path
 
 class Action(object):
     def __init__(self, verbose=False):
@@ -208,7 +208,7 @@ class Action(object):
         rc, stdout = self.execute_command_in_venv(cmd)
         rc, stdout = self._check_cmd_rc(rc, stdout)
 
-        cmd = ['make', 'install']
+        cmd = ['pip', 'install', '--editable', '.']
         try:
             rc, stdout = self.execute_command_in_venv(cmd)
             rc, stdout = self._check_cmd_rc(rc, stdout)

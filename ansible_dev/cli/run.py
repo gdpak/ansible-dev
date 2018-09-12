@@ -1,5 +1,6 @@
 import click
-from action import Action
+from ansible_dev.lib.action import Action
+from ansible_dev.config_handler.config import ConfigHandler
 import traceback
 from colorama import Fore, Back, Style
 
@@ -26,6 +27,7 @@ def cli(ctx, verbose):
     ctx.obj = Config()
     ctx.obj.verbose = verbose
     ctx.obj.action_plugin = Action(verbose)
+    ctx.obj.config_handler = ConfigHandler()
 
 @cli.command()
 @click.option('--venv-name', '-vname', default='.venv',
@@ -44,9 +46,30 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
     
     Usage: ansible-dev init <path>
     """
+
     if not path:
         click.echo("Usage: ansible-dev init <path>")
         return
+    
+    try:
+        workspace_section = 'worspace:' + str(path)
+        kwargs = {}
+        workspace_vars=dict(
+            venv_name=venv_name,
+            ansible_version=ansible_version,
+            ansible_repo=ansible_repo,
+            python_version=python_version,
+        )
+        kwargs[workspace_section] = workspace_vars
+        config.config_handler.update_dev_ansible_cfg(**kwargs)
+    except Exception as e:
+        if config.verbose > 0:
+            traceback.print_exc()
+        else:
+            click.secho("Could not write to config file: %s. Use -vv for"
+                "details" % e, fg='red')
+            click.secho(" We can still continue and it can be debugged later",
+                fg='blue')
 
     click.secho('Start: Init at %s ' % path, fg='green')
     
