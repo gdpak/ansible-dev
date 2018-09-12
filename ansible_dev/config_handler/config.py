@@ -60,16 +60,16 @@ class ConfigHandler(object):
 
         for section in kwargs:
             if section in old_sections:
-                old_sections.update(kwargs[section])
+                for key in kwargs[section]:
+                   old_config[section][key] = kwargs[section][key]
             else:
                 old_config[section] = kwargs[section]
         
         try:
              with open(filename_path, 'w') as f:
                  old_config.write(f)
-                 if new_file_loc is not None:
-                     old_config.write(new_file_loc)
-                 
+             if new_file_loc is not None:
+                 shutil.copy(filename_path, new_file_loc)
         except (OSError, IOError) as e:
             print ("Unable to modify cfg file : %s" % filename_path)
 
@@ -84,6 +84,19 @@ class ConfigHandler(object):
             filename = os.path.basename(file_path)
             if fnmatch.fnmatch(filename, 'ansible.cfg'):
                 self.update_config(file_path, new_file_path, **kwargs)
+
+    def get_value(self, filename, arg_section, key):
+        for file_path in self._config_files:
+            filen = os.path.basename(file_path)
+            if fnmatch.fnmatch(filen, filename):
+                c_parser = self.load_config_from_path(file_path)
+                sections = c_parser.sections()
+                for section in sections:
+                    if arg_section == section:
+                        print (section)
+                        print (c_parser[section].get(key))
+                        return c_parser[section].get(key)
+        return None
 
 if __name__ == "__main__":
     an_config = ConfigHandler()

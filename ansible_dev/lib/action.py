@@ -3,6 +3,9 @@ import subprocess
 import select
 import traceback
 import sys
+import errno
+import json
+
 if sys.version_info[0] == 2:
    def b(s):
       return s
@@ -15,6 +18,7 @@ class Action(object):
     def __init__(self, verbose=False):
         self._path = None
         self._verbose = verbose
+        self._network_org = 'ansible-network'
 
     @property
     def ansible_path(self):
@@ -32,10 +36,11 @@ class Action(object):
             if msg:
                 print(msg)
 
-    def create_directory(self, path):
+    def create_directory(self, path, config_handler):
         path = os.path.abspath(path)
         self._path = path
         self.ansible_path = 'ansible'
+        self._config_handler = config_handler
         if os.path.exists(path):
             self._log(level=0, msg="directory exists: %s" % path)
             return True
@@ -235,5 +240,85 @@ class Action(object):
             self._log(level=2, msg="run_command : cmd=%s rc=%s" % (cmd, rc))
             return out
         except Exception as e:
+            if self._verbose > 0:
+                traceback.print_exc()
+
+    def get_roles(self):
+        self._roles_path = os.path.join(self._path, 'roles')
+        try:
+            os.makedirs(self._roles_path)
+        except (OSError, IOError) as e:
+            if e == errno.EEXIST:
+               pass
+        try:
+            # update roles path in ansible cfg and copy to workspace root
+            config_handler = self._config_handler
+            kwargs = {}
+            kwargs = dict(
+                defaults=dict(
+                    roles_path=self._roles_path,
+                    ),
+            )
+            config_handler.update_ansible_cfg(self._path, **kwargs)
+            # Chdir to worspace root to start downloading roles
+            self._change_root_work_directory()
+            workspace_section = "workspace" + str(self._path)
+            default_galaxy_roles_list = self._config_handler.get_value(
+                'ansible-dev.cfg',
+                'defaults',
+                'galaxy_roles_list')
+            default_github_roles_list = self._config_handler.get_value(
+                'ansible-dev.cfg',
+                'defaults',
+                'git_roles_repos')
+            ws_galaxy_roles_list = self._config_handler.get_value(
+                'ansible-dev.cfg',
+                workspace_section,
+                'galaxy_roles_list')
+            ws_github_roles_list = self._config_handler.get_value(
+                'ansible-dev.cfg',
+                workspace_section,
+                'git_roles_repos')
+            
+            if default_galaxy_roles_list:
+                default_galaxy_roles_list = \
+                    list(default_galaxy_roles_list.split(','))
+                print (default_galaxy_roles_list)
+                for role in default_galaxy_roles_list:
+                    self._log(level=1, msg="Installing galaxy role %s" % role)
+                    cmd = ['ansible-galaxy', 'install', role]
+                    self.execute_command_in_venv(cmd)
+
+            if ws_galaxy_roles_list:
+                ws_galaxy_roles_list = \
+                    list(ws_galaxy_roles_list.split(','))
+                for role in ws_galaxy_roles_list:
+                    self._log(level=1, msg="Installing galaxy role %s" % role)
+                    cmd = ['ansible-galaxy', 'install', role]
+                    self.execute_command_in_venv(cmd)
+       
+            if default_github_roles_list:
+                default_github_roles_list = \
+                    list(default_github_roles_list.split(','))
+                for role in default_github_roles_list:
+                    self._log(level=1, msg="Installing github role %s" % role)
+                    role_name = os.path.basename(role)
+                    galaxy_simulated_role = self._network_org + '.' + role_name
+                    role_path = os.path.join(self._roles_path,
+                            galaxy_simulated_role)
+                    cmd = ['git', 'clone', role, role_path]
+                    self.execute_command_in_venv(cmd)
+
+            if ws_github_roles_list:
+                ws_github_roles_list = \
+                    list(ws_github_roles_list.split(','))
+                for role in ws_github_roles_list:
+                    self._log(level=1, msg="Installing github role %s" % role)
+                    role_name = os.path.basename(role)
+                    galaxy_simulated_role = self._network_org + '.' + role_name
+                    cmd = ['git', 'clone', role, self._roles_path/galaxy_simulated_role]
+                    self.execute_command_in_venv(cmd)
+        except Exception as e:
+            self._log(level=0, msg="roles_get failed : %s" % e)
             if self._verbose > 0:
                 traceback.print_exc()
