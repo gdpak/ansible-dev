@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='ansible_dev',
@@ -10,7 +10,9 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'ansible-dev=ansible_dev:cli',
+            'ansible-dev=ansible_dev.cli.run:cli',
         ],
     },
+    include_package_data=True,
+    packages = find_packages(),
 )
