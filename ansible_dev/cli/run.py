@@ -85,9 +85,6 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
         click.echo("Step 2/7: create Virtual Environment")
         venv_path = config.action_plugin.create_venv(app_name=venv_name,
             py_version=python_version)
-        #TBD test
-        config.action_plugin.get_roles()
-        return
         click.secho("Step 3/7: clone ansible git repo") 
         ansible_path = config.action_plugin.clone_git_repo(
             ansible_repo, ansible_version)
@@ -98,7 +95,7 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
         click.echo("Step 6/7: Checking ansible installation in virtial env")
         out = config.action_plugin.print_ansible_version(ansible_path)
         click.echo(out)
-        click.echo("Step 7/7: Checking ansible installation in virtial env")
+        click.echo("Step 7/7: Getting all roles defined in config file")
         config.action_plugin.get_roles()
         click.secho("Init Success: Ansible virtual env is ready at : %s" %
                     path, fg='green', bold='True')
