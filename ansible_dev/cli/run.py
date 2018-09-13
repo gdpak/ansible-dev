@@ -52,7 +52,7 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
         return
     
     try:
-        workspace_section = 'worspace:' + str(path)
+        workspace_section = 'workspace:' + str(path)
         kwargs = {}
         workspace_vars=dict(
             venv_name=venv_name,
@@ -79,21 +79,24 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
                   (type(path), type(venv_name)))
 
     try:
-        click.echo("Step 1/6: create workspace directory")
-        config.action_plugin.create_directory(path)
-        click.echo("Step 2/6: create Virtual Environment")
+
+        click.echo("Step 1/7: create workspace directory")
+        config.action_plugin.create_directory(path, config.config_handler)
+        click.echo("Step 2/7: create Virtual Environment")
         venv_path = config.action_plugin.create_venv(app_name=venv_name,
             py_version=python_version)
-        click.secho("Step 3/6: clone ansible git repo") 
+        click.secho("Step 3/7: clone ansible git repo") 
         ansible_path = config.action_plugin.clone_git_repo(
             ansible_repo, ansible_version)
-        click.secho("Step 4/6: Install ansible Dependencies in virtial env")
+        click.secho("Step 4/7: Install ansible Dependencies in virtial env")
         config.action_plugin.install_repo_dependancies_in_venv(ansible_path)
-        click.secho("Step 5/6: Install ansible in virtual-env")
+        click.secho("Step 5/7: Install ansible in virtual-env")
         config.action_plugin.activate_ansible_in_venv(ansible_path)
-        click.echo("Step 6/6: Checking ansible installation in virtial env")
+        click.echo("Step 6/7: Checking ansible installation in virtial env")
         out = config.action_plugin.print_ansible_version(ansible_path)
         click.echo(out)
+        click.echo("Step 7/7: Getting all roles defined in config file")
+        config.action_plugin.get_roles()
         click.secho("Init Success: Ansible virtual env is ready at : %s" %
                     path, fg='green', bold='True')
     except Exception as e:
