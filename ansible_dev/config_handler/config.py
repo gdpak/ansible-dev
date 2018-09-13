@@ -27,8 +27,9 @@ class ConfigHandler(object):
                 os.makedirs(path)
             self.find_files_in_current_package()
             for files in self._config_files:
-                shutil.copy(files, path)
-            # Update Config files of sysytem to writable files
+                if not os.path.exists(os.path.join(path, os.path.basename(files))):
+                    shutil.copy(files, path)
+            # Update Config files on this.object to writable files location
             filenames = []
             for files in self._config_files:
                 filenames.append(os.path.basename(files))
@@ -37,7 +38,7 @@ class ConfigHandler(object):
             for files in filenames:
                 self._config_files.append(os.path.join(self._path, files))
         except (OSError, IOError) as e:
-            print ('Excepion received : %s' % e)
+            print ('creating config file at user editable.Excepion received : %s' % e)
 
     def load_config_from_path(self, file_path):
         config_file_abspath = os.path.abspath(file_path)
@@ -93,8 +94,6 @@ class ConfigHandler(object):
                 sections = c_parser.sections()
                 for section in sections:
                     if arg_section == section:
-                        print (section)
-                        print (c_parser[section].get(key))
                         return c_parser[section].get(key)
         return None
 

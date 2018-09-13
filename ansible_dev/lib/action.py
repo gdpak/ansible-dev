@@ -262,7 +262,7 @@ class Action(object):
             config_handler.update_ansible_cfg(self._path, **kwargs)
             # Chdir to worspace root to start downloading roles
             self._change_root_work_directory()
-            workspace_section = "workspace" + str(self._path)
+            workspace_section = "workspace:" + str(self._path)
             default_galaxy_roles_list = self._config_handler.get_value(
                 'ansible-dev.cfg',
                 'defaults',
@@ -312,11 +312,14 @@ class Action(object):
             if ws_github_roles_list:
                 ws_github_roles_list = \
                     list(ws_github_roles_list.split(','))
+                print (ws_github_roles_list)
                 for role in ws_github_roles_list:
                     self._log(level=1, msg="Installing github role %s" % role)
                     role_name = os.path.basename(role)
                     galaxy_simulated_role = self._network_org + '.' + role_name
-                    cmd = ['git', 'clone', role, self._roles_path/galaxy_simulated_role]
+                    role_path = os.path.join(self._roles_path,
+                            galaxy_simulated_role)
+                    cmd = ['git', 'clone', role, role_path]
                     self.execute_command_in_venv(cmd)
         except Exception as e:
             self._log(level=0, msg="roles_get failed : %s" % e)
