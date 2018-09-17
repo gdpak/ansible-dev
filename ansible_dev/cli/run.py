@@ -101,6 +101,8 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
         config.action_plugin.get_roles()
         click.secho("Init Success: Ansible virtual env is ready at : %s" %
                     path, fg='green', bold='True')
+        # Set current workspace ctx
+        config.context.current_ctx = path
     except Exception as e:
         print ('Failed : Exception %s, run with -vv option to show full'
             ' traceback' % e)
@@ -119,3 +121,17 @@ def ls(config, detail):
     """
     out = config.context.print_all_contexts(detail)
     click.secho(out, fg='green', bold='True')
+
+@cli.command()
+@click.argument('path', type=click.Path())
+@pass_config
+def workon(config, path):
+    """
+    set ansible workspace to work on
+
+    Usage: ansible-dev workon <path>\n
+    default: Last workspace created by ansible-dev init <path>
+
+    """
+    config.context.current_ctx = path
+

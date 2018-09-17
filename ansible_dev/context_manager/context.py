@@ -17,6 +17,29 @@ class Context(object):
     def __init__(self, config_handler):
         self._cfg = config_handler
         self._contexts = []
+    
+    @property
+    def current_ctx(self):
+        return self._current_ctx
+
+    @current_ctx.setter
+    def current_ctx(self, path):
+        self.get_all_context()
+        found = False
+        for existing_ctx in self._contexts:
+            if str(path) == existing_ctx['path']:
+                found = True
+                break
+        if found:
+            workspace_sec = 'workspace:' + str(path)
+            venv = self._cfg.get_value("ansible-dev.cfg",
+                workspace_sec,
+                'venv_name')
+            self._current_ctx = CurrentContext(path=path, venv_name=venv)
+        else:
+            click.secho('Ansible workspace: %s is not yet created'
+                    % path, fg='red')
+
  
     def get_all_context(self):
         sections = self._cfg.get_value("ansible-dev.cfg")
@@ -53,5 +76,9 @@ class Context(object):
             self._print_a_context(ctx, detail)
             
         return out
+
+    def run_command(self, cmd):
+        rc, out = self.current_ctx.run(cmd)
+        return rc, out
 
 
