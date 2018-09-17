@@ -119,6 +119,8 @@ def ls(config, detail):
     """
     show details of ansible envionments
     """
+    # Set working context to best found match
+    config.context.set_auto_context()
     out = config.context.print_all_contexts(detail)
     click.secho(out, fg='green', bold='True')
 
