@@ -1,6 +1,7 @@
 import click
 from ansible_dev.lib.action import Action
 from ansible_dev.config_handler.config import ConfigHandler
+from ansible_dev.context_manager.context import Context
 import traceback
 from colorama import Fore, Back, Style
 
@@ -28,6 +29,7 @@ def cli(ctx, verbose):
     ctx.obj.verbose = verbose
     ctx.obj.action_plugin = Action(verbose)
     ctx.obj.config_handler = ConfigHandler()
+    ctx.obj.context = Context(ctx.obj.config_handler)
 
 @cli.command()
 @click.option('--venv-name', '-vname', default='.venv',
@@ -105,3 +107,15 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
         if config.verbose > 1:
             traceback.print_exc()
         return
+
+
+@cli.command()
+@click.option('--detail', '-l', is_flag=True,
+              help='detailed output of ls')
+@pass_config
+def ls(config, detail):
+    """
+    show details of ansible envionments
+    """
+    out = config.context.print_all_contexts(detail)
+    click.secho(out, fg='green', bold='True')

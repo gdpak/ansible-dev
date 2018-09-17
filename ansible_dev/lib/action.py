@@ -15,10 +15,12 @@ else:
 from ansible_dev.utils.system import get_bin_path
 
 class Action(object):
-    def __init__(self, verbose=False):
-        self._path = None
+    def __init__(self, verbose=False, path=None, ansible_path='ansible', venv='.venv'):
+        self._path = path
         self._verbose = verbose
         self._network_org = 'ansible-network'
+        self.ansible_path = ansible_path
+        self.venv = venv
 
     @property
     def ansible_path(self):
@@ -30,6 +32,17 @@ class Action(object):
             self._ansible_path = os.path.join(self._path, a_path)
         else:
             self._ansible_path = None
+
+    @property
+    def venv(self):
+        return self._venv
+
+    @venv.setter
+    def venv(self, ve_path):
+        if self._path:
+            self._venv = os.path.join(self._path, ve_path)
+        else:
+            self._venv = None
 
     def _log(self, level=0, msg=None):
         if level <= self._verbose:
@@ -145,6 +158,7 @@ class Action(object):
             raise e
 
     def execute_command_in_venv(self, cmd):
+        self._change_root_work_directory()
         venv_path = self._venv
         if venv_path is None:
             self._log(level=0, msg="venv is not yet created")

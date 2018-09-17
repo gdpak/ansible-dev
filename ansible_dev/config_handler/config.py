@@ -86,16 +86,24 @@ class ConfigHandler(object):
             if fnmatch.fnmatch(filename, 'ansible.cfg'):
                 self.update_config(file_path, new_file_path, **kwargs)
 
-    def get_value(self, filename, arg_section, key):
+    def get_value(self, filename, arg_section=None, key=None):
         for file_path in self._config_files:
             filen = os.path.basename(file_path)
             if fnmatch.fnmatch(filen, filename):
                 c_parser = self.load_config_from_path(file_path)
                 sections = c_parser.sections()
+                if arg_section is None:
+                    return sections
                 for section in sections:
                     if arg_section == section:
-                        return c_parser[section].get(key)
+                        if key is None:
+                            return c_parser[section]
+                        else:
+                            return c_parser[section].get(key)
         return None
+
+    def get_path(self):
+        return self._path
 
 if __name__ == "__main__":
     an_config = ConfigHandler()
