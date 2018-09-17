@@ -59,7 +59,7 @@ class Context(object):
             fg='green', bg='black', bold=True)
         if not detail:
             return
-        click.secho("Ansible Installed: ", fg='green',bold=True)
+        click.secho("Ansible Environment : ", fg='green',bold=False)
         cmd = ['ansible', '--version']
         rc, out = cur_ctx.run(cmd)
         click.secho(out)
@@ -70,7 +70,8 @@ class Context(object):
 
 
     def print_all_contexts(self, detail):
-        out = ' '
+        out = ''
+        click.secho('---', fg='blue', bold=True)
         self.get_all_context()
         for ctx in self._contexts:
             self._print_a_context(ctx, detail)
