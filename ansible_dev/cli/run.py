@@ -137,3 +137,21 @@ def workon(config, path):
     """
     config.context.current_ctx = path
 
+@cli.command()
+@click.option('--workspace', '-w', default=None,
+              type=click.STRING, help='workspace path to be updated')
+@click.option('--role-name', '-r', default=None,
+              type=click.STRING, help='galaxy role to be installed')
+@click.option('--role-repo', '-gr', default=None,
+        type=click.STRING, help='URL of github role to checkout')
+@pass_config
+def update(config, workspace, role_name, role_repo):
+    """
+    Update existing workspace
+    """
+    if workspace:
+        config.context.current_ctx = workspace 
+    else:
+        config.context.set_auto_context()
+    config.context.add_roles(role_name, role_repo)
+

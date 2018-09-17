@@ -74,18 +74,22 @@ class Context(object):
             cmd = ['ansible', '--version']
             rc, out = cur_ctx.run(cmd)
             click.secho(out)
+            venv_path = os.path.join(ctx['path'], ctx['venv'])
+            click.secho("Virtualenv : %s" % venv_path, fg='green',bold=False)
             click.secho("Roles: ", fg='green',bold=True)
             cmd = ['ansible-galaxy', 'list']
             rc, out = cur_ctx.run(cmd)
             click.secho(out)
+            click.secho('---', fg='blue', bold=True)
 
     def print_all_contexts(self, detail):
         out = ''
-        click.secho('---', fg='blue', bold=True)
         self.get_all_context()
         for ctx in self._contexts:
             self._print_a_context(ctx, detail)
-        click.secho('---', fg='blue', bold=True)
+
+        if not detail:
+            click.secho('---', fg='blue', bold=True)
         curctx = self.current_ctx
         if curctx:
             click.secho("Current working path: %s"
@@ -125,5 +129,22 @@ class Context(object):
     def run_command(self, cmd):
         rc, out = self.current_ctx.run(cmd)
         return rc, out
+
+    def add_roles(self, role_name, role_repo):
+        if role_name:
+           cmd = ['ansible-galaxy', 'install', role_name]
+           self.run_command(cmd)
+
+        if role_repo:
+           role_name = role_name = os.path.basename(role_repo)
+           ws_path = self._current_ctx._path
+           role_path = os.path.join(ws_path, 'roles')
+           abs_role_path = os.path.join(role_path, role_name)
+           cmd = ['git', 'clone', role_repo, abs_role_path]
+           self.run_command(cmd)
+
+
+           
+
 
 
