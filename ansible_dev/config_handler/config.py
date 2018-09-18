@@ -118,6 +118,17 @@ class ConfigHandler(object):
                 except (OSError, IOError) as e:
                     if e == errno.EEXIST:
                         pass
+        self._dest_runner = dest_runner
+
+    def copy_runner_vars_for_ansible(self, dir_name, file_name, **kwargs):
+        abs_dir_path = os.path.join(self._dest_runner, dir_name)
+        abs_file_path = os.path.join(abs_dir_path, file_name)
+        
+        for key in kwargs:
+            config_str = key + ' : ' +  kwargs[key] + '\n'
+        with open(abs_file_path, "a") as f:
+            f.write(config_str)
+
 
 if __name__ == "__main__":
     an_config = ConfigHandler()

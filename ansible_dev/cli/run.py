@@ -177,6 +177,5 @@ def playbook(config, name):
     """
     Create playbook templates
     """
-    click.echo("Start Create playbook template on Env: %s" % config.context.current_ctx._path)
     config.ansible_runner.prepare_ansible_runner_env()
 

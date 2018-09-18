@@ -8,7 +8,6 @@ setup(
         'Click',
         'colorama',
         'docutils',
-        'ansible-runner',
     ],
     entry_points={
         'console_scripts': [
