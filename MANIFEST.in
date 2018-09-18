@@ -2,3 +2,4 @@ include README.rst
 include MANIFEST.in
 include ansible_dev/config_handler/ansible-dev.cfg
 include ansible_dev/config_handler/ansible.cfg
+recursive-include ansible_dev/config_handler/runner_home *

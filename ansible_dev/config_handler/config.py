@@ -8,6 +8,7 @@ import os
 import copy
 import fnmatch
 import shutil
+import errno
 
 class ConfigHandler(object):
     def __init__(self, path=None):
@@ -18,6 +19,7 @@ class ConfigHandler(object):
             home_dir = os.path.expanduser("~")
             self._path = os.path.join(home_dir, '.ansible_dev.d/')
         self._config_files = []
+        self._runner_homedir = 'runner_home'
         self.create_editable_config_files()
 
     def create_editable_config_files(self):
@@ -104,6 +106,18 @@ class ConfigHandler(object):
 
     def get_path(self):
         return self._path
+
+    def copy_ansible_runner_input_dir(self):
+        dest_runner = os.path.join(self._path, self._runner_homedir)
+        # Empty the directory if it exists
+        shutil.rmtree(dest_runner, ignore_errors=False)
+        for root , dirs ,files in os.walk(os.path.dirname(__file__)):
+            if os.path.basename(root) == self._runner_homedir:
+                try:
+                    shutil.copytree(root, dest_runner)
+                except (OSError, IOError) as e:
+                    if e == errno.EEXIST:
+                        pass
 
 if __name__ == "__main__":
     an_config = ConfigHandler()

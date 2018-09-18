@@ -3,21 +3,22 @@ from ansible_dev.lib.action import Action
 import click
 
 class CurrentContext(object):
-    def __init__(self, path, venv_name):
+    def __init__(self, path, venv_name, verbose=0):
         self._path = path
         self._venv = venv_name
-        self._action = Action(verbose=False, path=path, venv=venv_name)
+        self._action = Action(verbose=verbose, path=path, venv=venv_name)
 
-    def run(self, command):
-        rc, out = self._action.execute_command_in_venv(command)
+    def run(self, command, verbose=0):
+        rc, out = self._action.execute_command_in_venv(command, verbose)
         return rc, out
 
 
 class Context(object):
-    def __init__(self, config_handler):
+    def __init__(self, config_handler, verbose=0):
         self._cfg = config_handler
         self._contexts = []
         self._current_ctx = None
+        self._verbose = verbose
     
     @property
     def current_ctx(self):
@@ -36,7 +37,8 @@ class Context(object):
             venv = self._cfg.get_value("ansible-dev.cfg",
                 workspace_sec,
                 'venv_name')
-            self._current_ctx = CurrentContext(path=path, venv_name=venv)
+            self._current_ctx = CurrentContext(path=path, venv_name=venv,
+                    verbose=self._verbose)
             self.set_persistent_current_context(path=path, venv=venv)
         else:
             self._current_ctx = None
@@ -126,8 +128,8 @@ class Context(object):
         kwargs[cuurent_ctx_section] = current_ctx_vars
         self._cfg.update_dev_ansible_cfg(**kwargs)
 
-    def run_command(self, cmd):
-        rc, out = self.current_ctx.run(cmd)
+    def run_command(self, cmd, verbose=0):
+        rc, out = self.current_ctx.run(cmd, verbose)
         return rc, out
 
     def add_roles(self, role_name, role_repo):
@@ -142,9 +144,3 @@ class Context(object):
            abs_role_path = os.path.join(role_path, role_name)
            cmd = ['git', 'clone', role_repo, abs_role_path]
            self.run_command(cmd)
-
-
-           
-
-
-
