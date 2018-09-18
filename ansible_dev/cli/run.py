@@ -2,6 +2,7 @@ import click
 from ansible_dev.lib.action import Action
 from ansible_dev.config_handler.config import ConfigHandler
 from ansible_dev.context_manager.context import Context
+from ansible_dev.ansible_play.ansible_player import AnsibleRunner
 import traceback
 from colorama import Fore, Back, Style
 
@@ -29,7 +30,8 @@ def cli(ctx, verbose):
     ctx.obj.verbose = verbose
     ctx.obj.action_plugin = Action(verbose)
     ctx.obj.config_handler = ConfigHandler()
-    ctx.obj.context = Context(ctx.obj.config_handler)
+    ctx.obj.context = Context(ctx.obj.config_handler, verbose)
+    ctx.obj.ansible_runner = AnsibleRunner(ctx.obj.context)
 
 @cli.command()
 @click.option('--venv-name', '-vname', default='.venv',
@@ -136,4 +138,44 @@ def workon(config, path):
 
     """
     config.context.current_ctx = path
+
+@cli.command()
+@click.option('--workspace', '-w', default=None,
+              type=click.STRING, help='workspace path to be updated')
+@click.option('--role-name', '-r', default=None,
+              type=click.STRING, help='galaxy role to be installed')
+@click.option('--role-repo', '-gr', default=None,
+        type=click.STRING, help='URL of github role to checkout')
+@pass_config
+def update(config, workspace, role_name, role_repo):
+    """
+    Update existing workspace
+    """
+    if workspace:
+        config.context.current_ctx = workspace 
+    else:
+        config.context.set_auto_context()
+    config.context.add_roles(role_name, role_repo)
+
+@cli.group()
+@click.option('--workspace', '-w', default=None,
+              type=click.STRING, help='workspace to work on')
+@pass_config
+def create(config, workspace):
+    """
+    Create playbook/roles and other vars file to get started
+    """
+    if workspace:
+        config.context.current_ctx = workspace 
+    else:
+        config.context.set_auto_context()
+
+@create.command()
+@click.argument('name', type=click.STRING)
+@pass_config
+def playbook(config, name):
+    """
+    Create playbook templates
+    """
+    config.ansible_runner.prepare_ansible_runner_env()
 

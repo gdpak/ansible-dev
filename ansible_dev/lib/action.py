@@ -157,7 +157,11 @@ class Action(object):
                 traceback.print_exc()
             raise e
 
-    def execute_command_in_venv(self, cmd):
+    def execute_command_in_venv(self, cmd, verbose=0):
+        if verbose:
+            old_verbose = self._verbose
+            self._verbose = verbose
+
         self._change_root_work_directory()
         venv_path = self._venv
         if venv_path is None:
@@ -171,6 +175,9 @@ class Action(object):
         rc, stdout = self._check_cmd_rc(rc, stdout)
         self._log(level=2, msg=rc)
         os.environ['PATH'] = old_env_vals['PATH']
+        if verbose:
+            self._verbose = old_verbose
+
         return rc, stdout
 
     def clone_git_repo(self, repo, version):

@@ -7,6 +7,7 @@ setup(
     install_requires=[
         'Click',
         'colorama',
+        'docutils',
     ],
     entry_points={
         'console_scripts': [
