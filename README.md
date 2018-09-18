@@ -5,6 +5,33 @@ Ansible Dev tools
 ```
 sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.0.tar.gz
 ```
+## Example
+1. Start an environment with ansible branch stable-2.6 and default python version
+```
+ansible-dev init -ver stable-2.6 <path>
+```
+2. Start another environment with ansible branch devel(default) and python 3
+```
+ansible-dev init <path> -py 3
+```
+3. Look at all the workspace created
+```
+ansible-dev ls -l
+```
+3. Change current workspace to work-on
+```
+ansible-dev workon <path>
+```
+4. Install a galaxy role in current workspace
+```
+ansible-dev update -r <galaxy_role_name>
+e.g ansible-dev update -r ansible-network.cisco_ios
+```
+5. Install a role from github in current workspace
+```
+ansible-dev update -gr <github-repo-path>
+e.g. ansible-dev update -gr https://github.com/gdpak/cisco_ios
+```
 
 ## Usage:
 ```
