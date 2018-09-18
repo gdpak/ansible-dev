@@ -1,11 +1,13 @@
 # ansible-dev
 Ansible Dev tools
 
-#Installation:
-
+## Installation:
+```
 sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.0.tar.gz
+```
 
-#Usage:
+## Usage:
+```
 bash-3.2$ ansible-dev --help
 Usage: ansible-dev [OPTIONS] COMMAND [ARGS]...
 
@@ -26,3 +28,4 @@ Commands:
   ls      show details of ansible envionments
   update  Update existing workspace
   workon  set ansible workspace to work on Usage:...
+```
