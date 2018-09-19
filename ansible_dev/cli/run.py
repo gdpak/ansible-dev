@@ -146,8 +146,10 @@ def workon(config, path):
               type=click.STRING, help='galaxy role to be installed')
 @click.option('--role-repo', '-gr', default=None,
         type=click.STRING, help='URL of github role to checkout')
+@click.option('--force', '-f', is_flag=True,
+        help='force create or update if role exists')
 @pass_config
-def update(config, workspace, role_name, role_repo):
+def update(config, workspace, role_name, role_repo, force):
     """
     Update existing workspace
     """
@@ -155,7 +157,7 @@ def update(config, workspace, role_name, role_repo):
         config.context.current_ctx = workspace 
     else:
         config.context.set_auto_context()
-    config.context.add_roles(role_name, role_repo)
+    config.context.add_roles(role_name, role_repo, force)
 
 @cli.group()
 @click.option('--workspace', '-w', default=None,
@@ -178,4 +180,15 @@ def playbook(config, name):
     Create playbook templates
     """
     config.ansible_runner.prepare_ansible_runner_env()
+    config.ansible_runner.create_playbook_with_name(name)
+
+@create.command()
+@click.argument('name', type=click.STRING)
+@pass_config
+def role(config, name):
+    """
+    Create role templates
+    """
+    config.ansible_runner.prepare_ansible_runner_env()
+    config.ansible_runner.create_role_with_name(name)
 
