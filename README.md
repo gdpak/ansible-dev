@@ -3,7 +3,7 @@ Ansible Dev tools
 
 ## Installation:
 ```
-sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.0.tar.gz
+sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.1.tar.gz
 ```
 ## Example
 1. Start an environment with ansible branch stable-2.6 and default python version
@@ -31,6 +31,20 @@ e.g ansible-dev update -r ansible-network.cisco_ios
 ```
 ansible-dev update -gr <github-repo-path>
 e.g. ansible-dev update -gr https://github.com/gdpak/cisco_ios
+```
+6. Update existing role to latest released version
+```
+ansible-dev update -r ansible-network.cisco_ios --force
+```
+
+7. Create a playbook directory with all essential templates (inventory/vars etc)
+```
+ansible-dev create playbook foo
+```
+
+8. Create a role with all template direcory and files
+```
+ansible-dev create role foo_role
 ```
 
 ## Usage:
