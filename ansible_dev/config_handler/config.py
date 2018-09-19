@@ -124,8 +124,10 @@ class ConfigHandler(object):
         abs_dir_path = os.path.join(self._dest_runner, dir_name)
         abs_file_path = os.path.join(abs_dir_path, file_name)
         
+        config_str = '# auto-generated from ansible-dev\n'
         for key in kwargs:
-            config_str = key + ' : ' +  kwargs[key] + '\n'
+            config_str = config_str + key + ' : ' +  kwargs[key] + '\n'
+
         with open(abs_file_path, "a") as f:
             f.write(config_str)
 

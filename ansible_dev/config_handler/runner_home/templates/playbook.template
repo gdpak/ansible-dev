@@ -1,0 +1,23 @@
+---
+# ansible-dev cli tool: auto generated template for playbook
+#
+
+- hosts: localhost
+  # Include task vars
+  #vars: {}
+
+  # pre-tasks before invoking network role
+  #pre_tasks: {}
+
+  # roles to be included
+  #roles: {}
+
+  # Playbook execution starts from here
+  tasks:
+    - name: run hello world
+      debug:
+        msg: "hello world!"
+
+  # cleanup tasks
+  #post_tasks: {}
+

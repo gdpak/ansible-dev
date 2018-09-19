@@ -1,6 +1,0 @@
----
-- hosts: all
-  tasks:
-    - debug: msg="ansible-dev cli tool Start Creating playbook structure"
-    - debug: var=workspace_root
-

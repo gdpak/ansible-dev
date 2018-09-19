@@ -132,9 +132,12 @@ class Context(object):
         rc, out = self.current_ctx.run(cmd, verbose)
         return rc, out
 
-    def add_roles(self, role_name, role_repo):
+    def add_roles(self, role_name, role_repo, force):
         if role_name:
-           cmd = ['ansible-galaxy', 'install', role_name]
+           if force:
+               cmd = ['ansible-galaxy', 'install', role_name, '--force']
+           else:
+               cmd = ['ansible-galaxy', 'install', role_name]
            self.run_command(cmd)
 
         if role_repo:
@@ -142,5 +145,8 @@ class Context(object):
            ws_path = self._current_ctx._path
            role_path = os.path.join(ws_path, 'roles')
            abs_role_path = os.path.join(role_path, role_name)
-           cmd = ['git', 'clone', role_repo, abs_role_path]
+           if force:
+               cmd = ['git', 'clone', role_repo, abs_role_path, '--force']
+           else:
+               cmd = ['git', 'clone', role_repo, abs_role_path]
            self.run_command(cmd)

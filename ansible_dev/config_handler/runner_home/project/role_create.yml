@@ -1,0 +1,9 @@
+---
+# ansible-dev cli tool: create playbbok template
+
+- hosts: all
+  tasks:
+    - name: call ansible-galaxy command in roles_path to create new role
+      command: 'ansible-galaxy init {{ role_name }}'
+      args:
+        chdir: '{{ workspace_root }}/roles'

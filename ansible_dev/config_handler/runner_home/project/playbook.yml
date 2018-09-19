@@ -1,0 +1,58 @@
+---
+# ansible-dev cli tool: create playbbok template
+
+- hosts: all
+  tasks:
+    - name: copy template inventory file to root of workspace
+      copy:
+        src: '{{ templates_path }}/inventory.networking.template'
+        dest: '{{ workspace_root }}/inventory'
+
+    - name: Create the playbooks dir if it does not exist
+      file:
+        path: '{{ workspace_root }}/playbooks'
+        state: directory
+        mode: 0755
+
+    - name: Create the playbook project directory
+      file:
+        path: '{{ workspace_root }}/playbooks/{{ playbook_name }}'
+        state: directory
+        mode: 0755
+
+    - set_fact:
+        cur_workdir: '{{ workspace_root }}/playbooks/{{ playbook_name }}'
+
+    - name: Create the symlink to root ansible.cfg
+      file:
+        src: '{{ workspace_root }}/ansible.cfg'
+        dest: '{{ cur_workdir }}/ansible.cfg'
+        state: link
+      
+    - name: Create the symlink to root roles dir
+      file:
+        src: '{{ workspace_root }}/roles'
+        dest: '{{ cur_workdir }}/roles'
+        state: link
+
+    - name: Create the symlink to root inventory
+      file:
+        src: '{{ workspace_root }}/inventory'
+        dest: '{{ cur_workdir }}/inventory'
+        state: link
+
+    - name: Create the directories for host vars/group vars/templates
+      file:
+        path: '{{ cur_workdir }}/{{ item }}'
+        state: directory
+        mode: 0755
+      with_items:
+        - vars
+        - templates
+        - host_vars
+        - group_vars
+
+    - name: copy template playbook to destination
+      copy:
+        src: '{{ templates_path }}/playbook.template'
+        dest: '{{ cur_workdir }}/main.yml'
