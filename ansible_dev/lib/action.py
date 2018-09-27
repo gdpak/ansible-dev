@@ -157,12 +157,15 @@ class Action(object):
                 traceback.print_exc()
             raise e
 
-    def execute_command_in_venv(self, cmd, verbose=0):
+    def execute_command_in_venv(self, cmd, verbose=0, path=None):
         if verbose:
             old_verbose = self._verbose
             self._verbose = verbose
-
-        self._change_root_work_directory()
+        
+        if not path:
+            self._change_root_work_directory()
+        else:
+            os.chdir(path)
         venv_path = self._venv
         if venv_path is None:
             self._log(level=0, msg="venv is not yet created")
@@ -250,7 +253,7 @@ class Action(object):
 
         cmd = ['pip', 'install', '--editable', '.']
         try:
-            rc, stdout = self.execute_command_in_venv(cmd)
+            rc, stdout = self.execute_command_in_venv(cmd, path=ansible_path)
             rc, stdout = self._check_cmd_rc(rc, stdout)
             self._log(level=2, msg="run_command : cmd=%s rc=%s" % (cmd, rc))
             self._log(level=0, msg="Ansible installed from :%s" % ansible_path)
