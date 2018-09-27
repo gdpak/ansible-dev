@@ -8,6 +8,7 @@ setup(
         'Click',
         'colorama',
         'docutils',
+        'configparser',
     ],
     entry_points={
         'console_scripts': [

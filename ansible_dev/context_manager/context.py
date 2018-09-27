@@ -113,9 +113,10 @@ class Context(object):
         self.get_all_context()
         if not len(self._contexts):
             click.secho("No workspace is created yet. Exiting", fg="red")
+            return
         # Set the context to first found workspace
         ctx = self._contexts[0]
-        self.current_ctx = CurrentConext(path=ctx["path"],
+        self.current_ctx = CurrentContext(path=ctx["path"],
             venv_name=ctx['venv'])
         self.set_persistent_current_context(path=ctx['path'], venv=ctx['venv'])
 
