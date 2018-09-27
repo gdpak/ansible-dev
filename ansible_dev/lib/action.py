@@ -208,8 +208,9 @@ class Action(object):
             os.chdir(repo_path)
         except (OSError, IOError) as e:
             raise e
-
-        cmd = ['pip', 'install' , '-r', 'requirements.txt']
+         
+        requirements_path = os.path.join(repo_path, 'requirements.txt')
+        cmd = ['pip', 'install' , '-r', requirements_path]
         try:
             rc, stdout = self.execute_command_in_venv(cmd)
             rc, stdout = self._check_cmd_rc(rc, stdout)
