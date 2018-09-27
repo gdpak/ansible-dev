@@ -1,0 +1,12 @@
+---
+
+- name: Init first workspace with all defaults
+  command: 'ansible-dev init {{ ansible_dev_workspaces.workspace1.path }}' 
+  register: result
+
+- assert:
+    that:
+      - "'Failed' not in result.stdout" 
+      - "'ERROR' not in result.stdout" 
+      - "'Init Success' in result.stdout"
+

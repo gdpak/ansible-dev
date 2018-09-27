@@ -1,0 +1,21 @@
+---
+
+- name: cleanup workspace1 if exists
+  file:
+    path: "{{ ansible_dev_workspaces.workspace1.path }}"
+    state: absent
+
+- name: cleanup workspace2 if exists
+  file:
+    path: "{{ ansible_dev_workspaces.workspace2.path }}"
+    state: absent
+
+- name: cleanup workspace3 if exists
+  file:
+    path: "{{ ansible_dev_workspaces.workspace3.path }}"
+    state: absent
+
+- name: cleanup internal config files if exists
+  file:
+    path: "~/.ansible_dev.d"
+    state: absent

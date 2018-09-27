@@ -1,0 +1,5 @@
+[lh]
+localhost
+
+[ls:vars]
+ansible_connection=local

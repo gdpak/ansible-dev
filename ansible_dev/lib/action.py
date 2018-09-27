@@ -188,7 +188,8 @@ class Action(object):
         ansible_dest = self._ansible_path
         cmd = [git_path, 'clone', repo, '-b', version, ansible_dest]
         if os.path.exists(ansible_dest):
-            self._log(level=0, msg="ansible repo exists : %s" % ansible_dest)
+            self._log(level=0, msg="WARNING: ansible repo exists : %s " \
+                "Leaving it unchanged " % ansible_dest)
             return ansible_dest
 
         try:
