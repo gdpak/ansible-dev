@@ -3,7 +3,7 @@ Ansible Dev tools
 
 ## Installation:
 ```
-sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.1.tar.gz
+sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.1.2.tar.gz
 ```
 ## Example
 1. Start an environment with ansible branch stable-2.6 and default python version
