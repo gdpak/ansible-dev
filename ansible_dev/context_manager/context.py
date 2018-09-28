@@ -82,6 +82,13 @@ class Context(object):
             cmd = ['ansible-galaxy', 'list']
             rc, out = cur_ctx.run(cmd)
             click.secho(out)
+            playbook_path = os.path.join(ctx['path'], 'playbooks')
+            if os.path.exists(playbook_path):
+                click.secho("Playbooks: ", fg='green',bold=True)
+                cmd = ['ls', playbook_path ]
+                rc, out = cur_ctx.run(cmd)
+                if not rc:
+                    click.secho(out)
             click.secho('---', fg='blue', bold=True)
 
     def print_all_contexts(self, detail, path=None):
