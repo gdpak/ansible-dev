@@ -1,6 +1,6 @@
 ---
 - hosts: centos02
-  gather_facts: no
+  gather_facts: yes
   tasks:
     - include_role:
         name: ansible_dev
