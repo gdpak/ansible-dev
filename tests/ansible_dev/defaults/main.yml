@@ -4,15 +4,26 @@ ansible_dev_workspaces:
     path: '~/ansible-workspace/prod'
     ansible_version: default
     python_ver: default
+    playbooks:
+      - tor_configs
+      - agg_configs
   workspace2:
     path: '~/ansible-workspace/staging'
     ansible_version: stable-2.6 
     python_ver: 2
     venv_name: staging
+    addon_roles: 'ansible-network.cisco_ios, ansible-network.cisco_nxos'
+    playbooks:
+      - tor_configs
+      - agg_configs
   workspace3:
     path: '~/ansible-workspace/dev'
     ansible_version: devel
 #python version 3 have issues with centos as it is not official rpm
 #   python_ver: 3
     python_ver: 2.7
+    addon_roles: 'ansible-network.cisco_nxos, ansible-network.cisco_ios'
+    playbooks:
+      - tor_configs
+      - agg_configs
 

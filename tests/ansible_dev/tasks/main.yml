@@ -14,4 +14,16 @@
   include_tasks: init.yml
   when: test_case is not defined or test_case == "init" or test_case == "all"
 
+- name: Execute tests related to update role function
+  include_tasks: update.yml
+  when: test_case is not defined or test_case == "update" or test_case == "all"
+
+- name: Execute tests related to create playbook function
+  include_tasks: create_playbook.yml
+  when: test_case is not defined or test_case == "create_playbook" or test_case == "all"
+  
+- name: Execute tests related to create role function
+  include_tasks: create_role.yml
+  when: test_case is not defined or test_case == "create_role" or test_case == "all"
+  
   

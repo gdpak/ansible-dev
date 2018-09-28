@@ -16,13 +16,17 @@ class AnsibleRunner(object):
         cfg_obj.copy_runner_vars_for_ansible('env', 'extravars', **kwargs)
 
         # Install ansible-runner in venv
-        cmd = ['pip', 'install' , 'ansible-runner']
-        self._ctx.run_command(cmd)
+        #cmd = ['pip', 'install' , 'ansible-runner']
+        #self._ctx.run_command(cmd)
 
     def create_playbook_with_name(self, name):
         # run playbook in venv
-        cmd = ['ansible-runner', '--playbook', 'playbook.yml', 'run',
-            self._runner_path, '--cmdline' , '\'-e playbook_name=%s\'' % name]
+        #cmd = ['ansible-runner', '--playbook', 'playbook.yml', 'run',
+        #    self._runner_path, '--cmdline' , '\'-e playbook_name=%s\'' % name]
+        cmd = ['ansible-playbook', self._runner_path/'playbook.yml',
+               '-e playbook_name=%s workspace_root=%s templates_path=%s' \
+               % (name, self._ctx._current_ctx._path, 
+                  os.path.join(self._runner_path, 'templates'))]
         self._ctx.run_command(cmd, verbose=3)
 
     def create_role_with_name(self, name):

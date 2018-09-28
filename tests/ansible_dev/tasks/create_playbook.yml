@@ -1,0 +1,40 @@
+---
+- set_fact: home_dir={{ ansible_env.HOME }}
+- set_fact:
+    path_1: "{{ ansible_dev_workspaces.workspace1.path | regex_replace('^\\~\\/(.*)$', '\\1') }}"
+    path_2: "{{ ansible_dev_workspaces.workspace2.path | regex_replace('^\\~\\/(.*)$', '\\1') }}"
+    path_3: "{{ ansible_dev_workspaces.workspace3.path | regex_replace('^\\~\\/(.*)$', '\\1') }}"
+
+- set_fact:
+    abs_path_1: "{{ home_dir + '/' + path_1 }}"
+    abs_path_2: "{{ home_dir + '/' + path_2 }}"
+    abs_path_3: "{{ home_dir + '/' + path_3 }}"
+
+- name: Update current workspace1 to workon
+  command: ansible-dev workon abs_path_1
+  register: result
+
+- name: check current workspace is set to latest created workspace
+  command: 'ansible-dev ls'
+  register: result
+
+- assert:
+    that:
+      - "'Current working path: {{ abs_path_1 }}' in result.stdout"
+
+- name: Create the playbook
+  command: ansible-dev create playbook "{{ ansible_dev_workspaces.workspace1.playbooks[0] }}" 
+  register: result
+
+- assert:
+    that:
+      - "'Failed' not in result.stdout" 
+      - "'ERROR' not in result.stdout"
+
+- name: check workspace has new roles installed
+  command: ansible-dev ls -l "{{ abs_path_1 }}"
+  register: result
+
+- assert:
+    that:
+      - "'{{ ansible_dev_workspaces.workspace1.playbooks[0] }}' in result.stdout"
