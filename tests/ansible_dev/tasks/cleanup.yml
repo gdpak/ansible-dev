@@ -4,16 +4,19 @@
   file:
     path: "{{ ansible_dev_workspaces.workspace1.path }}"
     state: absent
+  when: ansible_cleanup_force is defined and ansible_cleanup_force
 
 - name: cleanup workspace2 if exists
   file:
     path: "{{ ansible_dev_workspaces.workspace2.path }}"
     state: absent
+  when: ansible_cleanup_force is defined and ansible_cleanup_force
 
 - name: cleanup workspace3 if exists
   file:
     path: "{{ ansible_dev_workspaces.workspace3.path }}"
     state: absent
+  when: ansible_cleanup_force is defined and ansible_cleanup_force
 
 - name: cleanup internal config files if exists
   file:
