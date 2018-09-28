@@ -7,6 +7,8 @@ ansible_dev_workspaces:
     playbooks:
       - tor_configs
       - agg_configs
+    user_roles:
+      - disney_config_manager
   workspace2:
     path: '~/ansible-workspace/staging'
     ansible_version: stable-2.6 
@@ -16,6 +18,8 @@ ansible_dev_workspaces:
     playbooks:
       - tor_configs
       - agg_configs
+    user_roles:
+      - disney_config_manager
   workspace3:
     path: '~/ansible-workspace/dev'
     ansible_version: devel
@@ -26,4 +30,6 @@ ansible_dev_workspaces:
     playbooks:
       - tor_configs
       - agg_configs
+    user_roles:
+      - disney_config_manager
 

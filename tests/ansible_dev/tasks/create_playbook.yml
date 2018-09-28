@@ -31,7 +31,7 @@
       - "'Failed' not in result.stdout" 
       - "'ERROR' not in result.stdout"
 
-- name: check workspace has new roles installed
+- name: check workspace has new playbook installed
   command: ansible-dev ls -l "{{ abs_path_1 }}"
   register: result
 

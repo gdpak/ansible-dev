@@ -10,24 +10,20 @@
     abs_path_2: "{{ home_dir + '/' + path_2 }}"
     abs_path_3: "{{ home_dir + '/' + path_3 }}"
 
-- name: Update current workspace2 to workon
-  command: 'ansible-dev workon abs_path_2' 
+- name: Update current workspace3(dev) to workon
+  command: ansible-dev workon abs_path_3
   register: result
 
-- name: check current workspace is set to latest created workspace
-  command: 'ansible-dev ls'
+- name: check current workspace is set to dev workspace
+  command: ansible-dev ls
   register: result
 
 - assert:
     that:
-      - "'Current working path: {{ abs_path_2 }}' in result.stdout"
+      - "'Current working path: {{ abs_path_3 }}' in result.stdout"
 
-- set_fact:
-    role_1: "{{ ansible_dev_workspaces.workspace2.addon_roles | regex_replace('.*\\, (.*)$', '\\1') }}"
-    role_2: "{{ ansible_dev_workspaces.workspace2.addon_roles | regex_replace('(.*)\\,.*$', '\\1') }}"
-
-- name: Update workspace2 with new roles
-  command: ansible-dev update -r "{{ ansible_dev_workspaces.workspace2.addon_roles }}" 
+- name: Create my role
+  command: ansible-dev create role "{{ ansible_dev_workspaces.workspace3.user_roles[0] }}" 
   register: result
 
 - assert:
@@ -35,11 +31,10 @@
       - "'Failed' not in result.stdout" 
       - "'ERROR' not in result.stdout"
 
-- name: check workspace has new roles installed
-  command: ansible-dev ls -l "{{ abs_path_2 }}"
+- name: check workspace has new role installed
+  command: ansible-dev ls -l "{{ abs_path_3 }}"
   register: result
 
 - assert:
     that:
-      - "'{{ role_1 }}' in result.stdout"
-      - "'{{ role_2 }}' in result.stdout"
+      - "'{{ ansible_dev_workspaces.workspace3.user_roles[0] }}' in result.stdout"
