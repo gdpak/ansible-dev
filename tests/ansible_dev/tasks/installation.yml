@@ -1,0 +1,22 @@
+---
+- name: Install pip if not already installed
+  yum:
+    name: python-pip
+    state: installed
+    update_cache: yes
+  become: yes
+  when: ansible_distribution == 'Fedora' or ansible_distribution == 'CentOS'
+
+- name: Install pip if not already installed
+  apt:
+    name: python-pip
+    state: installed
+    update_cache: yes
+  become: yes
+  when: ansible_distribution == 'Ubuntu'
+
+- name: install ansible-dev module through pip
+  pip:
+    name: https://github.com/gdpak/ansible-dev/archive/v1.1.2.tar.gz
+  register: result
+

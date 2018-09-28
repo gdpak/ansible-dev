@@ -2,9 +2,16 @@
 # Main entry to this role
 #
 
+- name: Install ansible-dev package
+  include_tasks: installation.yml
+  when: test_stage is not defined or test_stage == "install" or test_stage == "all"
+
 - name: setup clean
   include_tasks: cleanup.yml
+  when: test_stage is not defined or test_stage == "pre-test" or test_tage == "all"
 
 - name: Execute tests related to init function
   include_tasks: init.yml
+  when: test_stage is not defined or test_stage == "init" or test_tage == "all"
+
   

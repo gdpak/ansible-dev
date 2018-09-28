@@ -12,5 +12,7 @@ ansible_dev_workspaces:
   workspace3:
     path: '~/ansible-workspace/test'
     ansible_version: stable-2.7
-    python_ver: 3
+#python version 3 have issues with centos as it is not official rpm
+#   python_ver: 3
+    python_ver: 2.7
 
