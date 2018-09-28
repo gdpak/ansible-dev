@@ -156,9 +156,9 @@ class Context(object):
            role_list = [c.strip() for c in role_name.split(',')]
            for role in role_list:
                if force:
-                   cmd = ['ansible-galaxy', 'install', role_name, '--force']
+                   cmd = ['ansible-galaxy', 'install', role, '--force']
                else:
-                   cmd = ['ansible-galaxy', 'install', role_name]
+                   cmd = ['ansible-galaxy', 'install', role]
                self.run_command(cmd)
 
         if role_repo:
