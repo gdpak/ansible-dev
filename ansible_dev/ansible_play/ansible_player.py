@@ -23,7 +23,11 @@ class AnsibleRunner(object):
         # run playbook in venv
         #cmd = ['ansible-runner', '--playbook', 'playbook.yml', 'run',
         #    self._runner_path, '--cmdline' , '\'-e playbook_name=%s\'' % name]
-        cmd = ['ansible-playbook', self._runner_path/'playbook.yml',
+        self._inv_path = os.path.join(self._runner_path, 'tmp_inventory')
+        self._playbook_project = os.path.join(self._runner_path, 'project')
+        playbook_path = os.path.join(self._playbook_project, 'playbook.yml')
+        cmd = ['ansible-playbook', playbook_path,
+               '-i', self._inv_path,
                '-e playbook_name=%s workspace_root=%s templates_path=%s' \
                % (name, self._ctx._current_ctx._path, 
                   os.path.join(self._runner_path, 'templates'))]
