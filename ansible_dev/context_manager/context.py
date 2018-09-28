@@ -84,11 +84,24 @@ class Context(object):
             click.secho(out)
             click.secho('---', fg='blue', bold=True)
 
-    def print_all_contexts(self, detail):
+    def print_all_contexts(self, detail, path=None):
         out = ''
         self.get_all_context()
-        for ctx in self._contexts:
-            self._print_a_context(ctx, detail)
+        if path:
+            ctx_to_print = None
+            for ectx in self._contexts:
+                if ectx['path'] == path:
+                    ctx_to_print = ectx
+                    break
+            if ctx_to_print:
+                self._print_a_context(ctx_to_print, detail)
+            else:
+                click.secho('workspace: %s is not yet created' % path,
+                    fg='red')
+                return out
+        else:
+            for ctx in self._contexts:
+                self._print_a_context(ctx, detail)
 
         if not detail:
             click.secho('---', fg='blue', bold=True)
@@ -135,11 +148,13 @@ class Context(object):
 
     def add_roles(self, role_name, role_repo, force):
         if role_name:
-           if force:
-               cmd = ['ansible-galaxy', 'install', role_name, '--force']
-           else:
-               cmd = ['ansible-galaxy', 'install', role_name]
-           self.run_command(cmd)
+           role_list = [c.strip() for c in role_name.split(',')]
+           for role in role_list:
+               if force:
+                   cmd = ['ansible-galaxy', 'install', role, '--force']
+               else:
+                   cmd = ['ansible-galaxy', 'install', role]
+               self.run_command(cmd)
 
         if role_repo:
            role_name = role_name = os.path.basename(role_repo)

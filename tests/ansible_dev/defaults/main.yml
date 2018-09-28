@@ -1,17 +1,17 @@
 ---
 ansible_dev_workspaces:
   workspace1:
-    path: '~/ansible-workspace/dev'
+    path: '~/ansible-workspace/prod'
     ansible_version: default
     python_ver: default
   workspace2:
     path: '~/ansible-workspace/staging'
-    ansible_version: devel
+    ansible_version: stable-2.6 
     python_ver: 2
     venv_name: staging
   workspace3:
-    path: '~/ansible-workspace/test'
-    ansible_version: stable-2.7
+    path: '~/ansible-workspace/dev'
+    ansible_version: devel
 #python version 3 have issues with centos as it is not official rpm
 #   python_ver: 3
     python_ver: 2.7

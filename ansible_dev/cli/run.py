@@ -116,14 +116,15 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
 @cli.command()
 @click.option('--detail', '-l', is_flag=True,
               help='detailed output of ls')
+@click.argument('path', type=click.STRING, required=False)
 @pass_config
-def ls(config, detail):
+def ls(config, detail, path):
     """
     show details of ansible envionments
     """
     # Set working context to best found match
     config.context.set_auto_context()
-    out = config.context.print_all_contexts(detail)
+    out = config.context.print_all_contexts(detail, path)
     click.secho(out, fg='green', bold='True')
 
 @cli.command()
@@ -143,7 +144,7 @@ def workon(config, path):
 @click.option('--workspace', '-w', default=None,
               type=click.STRING, help='workspace path to be updated')
 @click.option('--role-name', '-r', default=None,
-              type=click.STRING, help='galaxy role to be installed')
+              type=click.STRING, help='galaxy role. supports multiple roles with ,')
 @click.option('--role-repo', '-gr', default=None,
         type=click.STRING, help='URL of github role to checkout')
 @click.option('--force', '-f', is_flag=True,
