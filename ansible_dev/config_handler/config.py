@@ -110,7 +110,11 @@ class ConfigHandler(object):
     def copy_ansible_runner_input_dir(self):
         dest_runner = os.path.join(self._path, self._runner_homedir)
         # Empty the directory if it exists
-        shutil.rmtree(dest_runner, ignore_errors=False)
+        try:
+            shutil.rmtree(dest_runner, ignore_errors=True)
+        except (OSError, IOError) as e:
+           print e
+           pass
         for root , dirs ,files in os.walk(os.path.dirname(__file__)):
             if os.path.basename(root) == self._runner_homedir:
                 try:
