@@ -80,3 +80,4 @@ This tool does not have any OS specific code but there might be some pip, python
 
 - CentOS/RHEL, 7.4
 - Ubuntu, 16.04
+- MacOSx, 10.13.6(High Sierra)
