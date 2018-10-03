@@ -11,7 +11,7 @@
     abs_path_3: "{{ home_dir + '/' + path_3 }}"
 
 - name: Update current workspace1 to workon
-  command: ansible-dev workon abs_path_1
+  command: ansible-dev workon "{{ abs_path_1 }}"
   register: result
 
 - name: check current workspace is set to latest created workspace

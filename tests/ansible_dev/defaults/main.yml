@@ -1,4 +1,6 @@
 ---
+ansible_cleanup_force: False
+
 ansible_dev_workspaces:
   workspace1:
     path: '~/ansible-workspace/prod'
