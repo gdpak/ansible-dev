@@ -11,7 +11,7 @@
     abs_path_3: "{{ home_dir + '/' + path_3 }}"
 
 - name: Update current workspace3(dev) to workon
-  command: ansible-dev workon abs_path_3
+  command: ansible-dev workon "{{ abs_path_3 }}"
   register: result
 
 - name: check current workspace is set to dev workspace
@@ -21,6 +21,11 @@
 - assert:
     that:
       - "'Current working path: {{ abs_path_3 }}' in result.stdout"
+
+- name: cleanup role directory if already exists
+  file:
+    path: '{{ abs_path_3 }}/roles/{{ ansible_dev_workspaces.workspace3.user_roles[0] }}'
+    state: absent
 
 - name: Create my role
   command: ansible-dev create role "{{ ansible_dev_workspaces.workspace3.user_roles[0] }}" 
