@@ -6,43 +6,47 @@ Ansible Dev tools
 sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.1.2.tar.gz
 ```
 ## Example
-1. Start an environment with ansible branch stable-2.6 and default python version
+
+1. Start another environment with ansible branch devel(default)
+```
+ansible-dev init <path>
+```
+2. Start an environment with ansible branch stable-2.6 and default python version
 ```
 ansible-dev init -ver stable-2.6 <path>
 ```
-2. Start another environment with ansible branch devel(default) and python 3
-```
-ansible-dev init <path> -py 3
-```
 3. Look at all the workspace created
 ```
-ansible-dev ls -l
+ansible-dev ls
 ```
-3. Change current workspace to work-on
+4. Look at details of one workspace
+```
+ansible-dev ls -l <path>
+```
+
+5. Change current workspace to work-on
 ```
 ansible-dev workon <path>
 ```
-4. Install a galaxy role in current workspace
+6. Install a galaxy role in current workspace
 ```
 ansible-dev update -r <galaxy_role_name>
 e.g ansible-dev update -r ansible-network.cisco_ios
 ```
-5. Install a role from github in current workspace
+7. Install a role from github in current workspace
 ```
 ansible-dev update -gr <github-repo-path>
 e.g. ansible-dev update -gr https://github.com/gdpak/cisco_ios
 ```
-6. Update existing role to latest released version
+8. Update existing role to latest released version
 ```
 ansible-dev update -r ansible-network.cisco_ios --force
 ```
-
-7. Create a playbook directory with all essential templates (inventory/vars etc)
+9. Create a playbook directory with all essential templates (inventory/vars etc)
 ```
 ansible-dev create playbook foo
 ```
-
-8. Create a role with all template direcory and files
+10. Create a role with all template direcory and files
 ```
 ansible-dev create role foo_role
 ```
@@ -70,3 +74,9 @@ Commands:
   update  Update existing workspace
   workon  set ansible workspace to work on Usage:...
 ```
+## Platforms tested
+
+This tool does not have any OS specific code but there might be some pip, python related dependacies based on OS. It has been tested with automated scripts on below platforms
+
+- CentOS, 7.4
+- Ubuntu, 16.04
