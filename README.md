@@ -78,5 +78,5 @@ Commands:
 
 This tool does not have any OS specific code but there might be some pip, python related dependacies based on OS. It has been tested with automated scripts on below platforms
 
-- CentOS, 7.4
+- CentOS/RHEL, 7.4
 - Ubuntu, 16.04
