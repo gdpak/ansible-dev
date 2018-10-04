@@ -3,7 +3,7 @@ Ansible Dev tools
 
 ## Installation:
 ```
-sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.1.2.tar.gz
+sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.1.0.tar.gz
 ```
 ## Example
 
