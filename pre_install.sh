@@ -15,7 +15,7 @@ find_os_type() {
     
     if [ "{$OS}" == "windowsnt" ]; then
         OS=windows
-    elif [ "{$OS}" == "darwin" ]; then
+    elif [ "{$OS}" == "darwin.*" ]; then
         OS=mac
     else
         OS=`uname`
@@ -59,6 +59,7 @@ find_os_type() {
             readonly MACH
         fi
     fi
+    OS=`lowercase $OS`
 }
 
 find_os_type
