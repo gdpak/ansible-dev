@@ -28,7 +28,6 @@ update_package_manager() {
 # arg4 : command ('install/remove' ... )
 install_a_package() {
     # Check if package bin is already installed
-    echo "checking $3"
     pkg_installed=`$3 --version`
     re='not found'
     if [[ $pkg_installed =~ $re ]]; then
@@ -145,6 +144,16 @@ case $OS in
         esac
         ;;
     darwin)
+         # Check if brew is already installed
+         brew_version=`brew --version`
+         re='not found'
+         if [[ $brew_version =~ $re ]]; then
+             echo "Installing brew"
+             brew_url='https://raw.githubusercontent.com/Homebrew/install/master/install'
+             brew_install=$(/usr/bin/ruby -e "$(curl -fsSL $brew_url)" << "\r\n")
+         else
+             echo "Found installed brew: $brew_version"
+         fi
          echo "MacOS: Using brew to install pyhon"
          PACKAGE_MANAGER='brew'
          update_package_manager $PACKAGE_MANAGER
