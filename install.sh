@@ -24,15 +24,16 @@ update_package_manager() {
 
 # arg1 : package_manger
 # arg2 : package_name
-# arg3 : command ('install/remove' ... )
-# arg4 : pkg binary_name
+# arg3 : pkg binary_name
+# arg4 : command ('install/remove' ... )
 install_a_package() {
     # Check if package bin is already installed
-    pkg_installed=`$4 --version`
+    echo "checking $3"
+    pkg_installed=`$3 --version`
     re='not found'
     if [[ $pkg_installed =~ $re ]]; then
-        echo "$3: $2 using $1"
-        install_logs=`$1 $3 $2`
+        echo "$4: $2 using $1"
+        install_logs=`$1 $4 $2`
         echo $install_logs
     else
         echo "$2 is already installed: $pkg_installed"
@@ -48,7 +49,7 @@ install_packages() {
     for package in "${pkg_array[@]}" ; do
         pkg_name="${package%%:*}"
         pkg_bin="${package##*:}"
-        install_a_package $pkg_manager $pkg_name $pkg_command $pkg_bin 
+        install_a_package $pkg_manager $pkg_name $pkg_bin $pkg_command
     done
 }
 
@@ -155,5 +156,3 @@ case $OS in
         echo "Unsupported OS. exiting ..."
         ;;
 esac
-
-
