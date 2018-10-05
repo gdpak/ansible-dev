@@ -5,6 +5,7 @@ setup(
     version='0.1',
     py_modules=['ansible_dev'],
     install_requires=[
+        'virtualenv',
         'Click',
         'colorama',
         'docutils',
