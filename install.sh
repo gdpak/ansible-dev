@@ -19,7 +19,7 @@ MACOS_EASY_INSTALL_ARRAY=("pip:pip")
 
 update_package_manager() {
     echo "Updating $1"
-    update_pkg=`$1 update`
+    update_pkg=`$1 -y update`
 }
 
 # arg1 : package_manger
@@ -28,11 +28,11 @@ update_package_manager() {
 # arg4 : command ('install/remove' ... )
 install_a_package() {
     # Check if package bin is already installed
-    pkg_installed=`$3 --version`
+    pkg_installed="$($3 --version 2>&1)"
     re='not found'
     if [[ $pkg_installed =~ $re ]]; then
         echo "$4: $2 using $1"
-        install_logs=`$1 $4 $2`
+        install_logs=`$1 $4 $2 -y`
         echo $install_logs
     else
         echo "$2 is already installed: $pkg_installed"
@@ -127,7 +127,6 @@ case $OS in
                 ;;
             redhat)
                 PACKAGE_MANAGER=yum
-                update_package_manager $PACKAGE_MANAGER
                 install_packages $PACKAGE_MANAGER $PACKAGE_COMMAND "${RHEL_PACKAGES_ARRAY[@]}"
                 ;;
             suse)
