@@ -2,9 +2,23 @@
 Ansible Dev tools
 
 ## Installation:
+
+### Auto Installation
+ Following script will install latest version of ansible-dev tool also it will
+ install dependancies i.e. python, pip and virtualenv if not already installed
+
 ```
-sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.1.0.tar.gz
+curl https://raw.githubusercontent.com/gdpak/ansible-dev/master/install.sh > install.sh
+chmod 764 install.sh
+sudo ./install.sh 
 ```
+
+### Manual Installation
+
+Please follow below links as per your OS
+
+[Ubuntu](docs/debian/README.md) | [Centos/RHEL](docs/rhel/README.md) | [MacOS](docs/MacOS/README.md)
+
 ## Example
 
 1. Start another environment with ansible branch devel(default)
