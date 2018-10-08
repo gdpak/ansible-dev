@@ -1,9 +1,9 @@
 # ansible-dev
 ansible-dev is a tool that helps you to get started with best practices of
 ansible with a few simple commands. It manages ansible inside a virtualenv. You
-can create different virtualenv with different ansible-versions. you can set up 
-inventory, ansible.cfg and playbooks and galaxy roles and much more as per best practices. 
-
+can create different virtualenv with different ansible-versions(called workspace hereafter).
+Once a workspace is created, you can add playbooks or download roles from galaxy or can
+create your own roles template using single cli command.
 
 ## Installation:
 
