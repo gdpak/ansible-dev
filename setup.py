@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='ansible_dev',
-    version='0.1',
+    version='1.1.0',
     py_modules=['ansible_dev'],
     install_requires=[
         'Click',
