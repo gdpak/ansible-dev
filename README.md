@@ -1,11 +1,15 @@
 # ansible-dev
-Ansible Dev tools
+ansible-dev is a tool that helps you to get started with best practices of
+ansible with a few simple commands. It manages ansible inside a virtualenv. You
+can create different virtualenv with different ansible-versions. you can set up 
+inventory, ansible.cfg and playbooks and galaxy roles and much more as per best practices. 
+
 
 ## Installation:
 
 ### Auto Installation
- Following script will install latest version of ansible-dev tool also it will
- install dependancies i.e. python, pip and virtualenv if not already installed
+ Following script will install latest version of ansible-dev tool. 
+ It will also install dependancies i.e. python, pip and virtualenv if not already installed
 
 ```
 curl https://raw.githubusercontent.com/gdpak/ansible-dev/master/install.sh > install.sh
@@ -19,15 +23,15 @@ Please follow below links as per your OS
 
 [Ubuntu](docs/debian/README.md) | [Centos/RHEL](docs/rhel/README.md) | [MacOS](docs/MacOS/README.md)
 
-## Example
+## Example Usage
 
-1. Start another environment with ansible branch devel(default)
+1. Start an environment with ansible branch stable-2.6(default)
 ```
 ansible-dev init <path>
 ```
-2. Start an environment with ansible branch stable-2.6 and default python version
+2. Start an environment with ansible branch stable-2.7 and default python version
 ```
-ansible-dev init -ver stable-2.6 <path>
+ansible-dev init -ver stable-2.7 <path>
 ```
 3. Look at all the workspace created
 ```
