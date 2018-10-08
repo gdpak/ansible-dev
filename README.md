@@ -29,7 +29,7 @@ Please follow below links as per your OS
 ```
 ansible-dev init <path>
 ```
-2. Start an environment with ansible branch stable-2.7 and default python version
+2. Start another environment with ansible branch stable-2.7 and default python version
 ```
 ansible-dev init -ver stable-2.7 <path>
 ```
@@ -98,4 +98,4 @@ This tool does not have any OS specific code but there might be some pip, python
 
 - CentOS/RHEL, 7.4
 - Ubuntu, 16.04
-- MacOSx, 10.13.6(High Sierra) [Installing virtualenv on mac](docs/MacOS/README.md)
+- MacOSx, 10.13.6(High Sierra)
