@@ -56,6 +56,14 @@ install_packages() {
     done
 }
 
+get_latest_release_ansible_dev() {
+    ansible_dev_latest_release="$(\
+        curl --silent "https://api.github.com/repos/gdpak/ansible-dev/releases/latest" | \
+        grep '"tag_name":' | \
+        sed -E 's/.*"([^"]+)".*/\1/')"
+    ANSIBLE_DEV_TAR_BALL="https://github.com/gdpak/ansible-dev/archive/$ansible_dev_latest_release.tar.gz"
+}
+
 install_pip_packages() {
     for package in "${PIP_PACKAGES_ARRAY[@]}" ; do
         pkg_name="${package%%:*}"
@@ -64,8 +72,13 @@ install_pip_packages() {
         re='not found'
         if [[ $pkg_installed =~ $re ]]; then
             echo "Installing $pkg_name using pip"
-            install_logs=`pip install $pkg_name`
-            echo $install_logs
+            if [[ $pkg_name == "ansible-dev" ]]; then
+                get_latest_release_ansible_dev
+                install_logs=`pip install $ANSIBLE_DEV_TAR_BALL`
+            else
+                install_logs=`pip install $pkg_name`
+                echo $install_logs
+            fi
         else
             echo "$pkg_name is already installed: $pkg_installed"
         fi
