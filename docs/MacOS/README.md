@@ -1,4 +1,11 @@
-## Installing python, pip and virtualenv on MacOS 
+## Install ansible-dev using pip
+1. Install current latest released branch (v1.1.0)
+
+```
+sudo pip install https://github.com/gdpak/ansible-dev/archive/v1.1.0.tar.gz
+```
+
+## OPTIONAL (if python, pip and virtualenv are not already installed)
 
 one of the easiest way is to install though brew
 
@@ -33,4 +40,3 @@ sudo easy_install pip
 ```
 sudo pip install virtualenv
 ```
-
