@@ -17,6 +17,10 @@ RHEL_PACKAGES_ARRAY=("python:python"
 MACOS_PACKAGES_ARRAY=("python@2:python")
 MACOS_EASY_INSTALL_ARRAY=("pip:pip")
 
+PIP_PACKAGES_ARRAY=( "virtualenv:virtualenv --version"
+                     "ansible-dev:ansible-dev ls")
+                     
+
 update_package_manager() {
     echo "Updating $1"
     update_pkg=`$1 -y update`
@@ -52,6 +56,22 @@ install_packages() {
     done
 }
 
+install_pip_packages() {
+    for package in "${PIP_PACKAGES_ARRAY[@]}" ; do
+        pkg_name="${package%%:*}"
+        pkg_bin="${package##*:}"
+        pkg_installed="$($pkg_bin 2>&1)"
+        re='not found'
+        if [[ $pkg_installed =~ $re ]]; then
+            echo "Installing $pkg_name using pip"
+            install_logs=`pip install $pkg_name`
+            echo $install_logs
+        else
+            echo "$pkg_name is already installed: $pkg_installed"
+        fi
+    done
+}
+
 lowercase(){
     echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
 }
@@ -60,7 +80,7 @@ find_os_type() {
     OS=`lowercase \`uname\``
     local KERNEL=`uname -r`
     local MACH=`uname -m`
-    
+
     if [ "{$OS}" == "windowsnt" ]; then
         OS=windows
     elif [ "{$OS}" == "darwin.*" ]; then
@@ -167,3 +187,7 @@ case $OS in
         echo "Unsupported OS. exiting ..."
         ;;
 esac
+
+# pip is now installed . Install ansible-dev from pip
+install_pip_packages
+echo "!! ansible-dev has been successfully Installed !!"
