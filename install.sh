@@ -9,17 +9,20 @@
 
 # Packages array "package_name:package_bin"
 DEBIAN_PACKAGES_ARRAY=( "python:python"
-                        "python-pip:pip" )
+                        "python-pip:pip"
+                        "git:git" )
 
 RHEL_PACKAGES_ARRAY=("python:python"
-                     "python-pip:pip")
+                     "python-pip:pip"
+                     "git:git")
 
-MACOS_PACKAGES_ARRAY=("python@2:python")
+MACOS_PACKAGES_ARRAY=("python@2:python"
+                      "git:git" )
 MACOS_EASY_INSTALL_ARRAY=("pip:pip")
 
 PIP_PACKAGES_ARRAY=( "virtualenv:virtualenv --version"
                      "ansible-dev:ansible-dev ls")
-                     
+
 
 update_package_manager() {
     echo "Updating $1"
