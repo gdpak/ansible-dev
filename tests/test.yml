@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: u1
   gather_facts: yes
   tasks:
     - include_role:

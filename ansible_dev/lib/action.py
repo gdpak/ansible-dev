@@ -215,6 +215,7 @@ class Action(object):
        
         # Upgrade Pip first before installing ansible dependancies
         # It caused pip install fail on some OS(es)
+        ''' 
         cmd = ['pip', 'install', '--upgrade',  'pip']
         try:
             rc, stdout = self.execute_command_in_venv(cmd)
@@ -225,7 +226,7 @@ class Action(object):
             if self._verbose > 0:
                 traceback.print_exc()
             pass
-         
+        '''
         requirements_path = os.path.join(repo_path, 'requirements.txt')
         cmd = ['pip', 'install' , '-r', requirements_path]
         try:

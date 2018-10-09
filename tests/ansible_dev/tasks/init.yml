@@ -11,7 +11,7 @@
     abs_path_3: "{{ home_dir + '/' + path_3 }}"
 
 - name: Init first workspace with all defaults
-  command: 'ansible-dev init {{ ansible_dev_workspaces.workspace1.path }}' 
+  shell: 'ansible-dev -vv init {{ ansible_dev_workspaces.workspace1.path }}' 
   register: result
 
 - assert:
@@ -21,7 +21,7 @@
       - "'Init Success' in result.stdout"
 
 - name: check current workspace is set to latest created workspace
-  command: 'ansible-dev ls'
+  command: ansible-dev ls
   register: result
 
 - assert:

@@ -3,3 +3,10 @@ localhost
 
 [lh:vars]
 ansible_connection=local
+
+[ubuntu]
+u1 ansible_host=11.1.1.43
+ 
+[ubuntu:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_pass=vagrant

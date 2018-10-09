@@ -15,9 +15,17 @@
   become: yes
   when: ansible_distribution == 'Ubuntu'
 
-- name: install ansible-dev module through pip
-  pip:
-    name: https://github.com/gdpak/ansible-dev/archive/v1.1.0.tar.gz
-  become: yes
+- name: get install script from github
+  shell: 'curl https://raw.githubusercontent.com/gdpak/ansible-dev/master/install.sh > install.sh'
   register: result
 
+- name: change mode of file to be executable
+  file:
+    path: 'install.sh'
+    state: touch
+    mode: "u=rwx,g=rw,o=rw"
+  become: true
+
+- name: execute the bash script to install latest from ansible-dev
+  shell: './install.sh'
+  register: result
