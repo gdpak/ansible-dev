@@ -159,9 +159,9 @@ case $OS in
                 install_packages $PACKAGE_MANAGER $PACKAGE_COMMAND "${DEBIAN_PACKAGES_ARRAY[@]}"
                 ;;
             redhat)
-                #install eepl on RHEL
-                echo "Installing eepl repo for python-pip"
-                eepl_install = "$(yum install epel-release 2>&1)"
+                #install epel on RHEL
+                echo "Installing epel-repo for python-pip"
+                eepl_install = "$(yum -y install epel-release 2>&1)"
                 PACKAGE_MANAGER=yum
                 install_packages $PACKAGE_MANAGER $PACKAGE_COMMAND "${RHEL_PACKAGES_ARRAY[@]}"
                 ;;

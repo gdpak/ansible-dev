@@ -1,5 +1,5 @@
 ---
-- hosts: u1
+- hosts: c1
   gather_facts: yes
   tasks:
     - include_role:

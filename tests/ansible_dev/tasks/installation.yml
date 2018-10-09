@@ -1,20 +1,4 @@
 ---
-- name: Install pip if not already installed
-  yum:
-    name: python-pip
-    state: installed
-    update_cache: yes
-  become: yes
-  when: ansible_distribution == 'Fedora' or ansible_distribution == 'CentOS'
-
-- name: Install pip if not already installed
-  apt:
-    name: python-pip
-    state: installed
-    update_cache: yes
-  become: yes
-  when: ansible_distribution == 'Ubuntu'
-
 - name: get install script from github
   shell: 'curl https://raw.githubusercontent.com/gdpak/ansible-dev/master/install.sh > install.sh'
   register: result
@@ -29,3 +13,4 @@
 - name: execute the bash script to install latest from ansible-dev
   shell: './install.sh'
   register: result
+  become: true

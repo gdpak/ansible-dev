@@ -10,3 +10,10 @@ u1 ansible_host=11.1.1.43
 [ubuntu:vars]
 ansible_ssh_user=vagrant
 ansible_ssh_pass=vagrant
+
+[centos]
+c1 ansible_host=11.1.1.42
+ 
+[centos:vars]
+ansible_ssh_user=vagrant
+ansible_ssh_pass=vagrant
