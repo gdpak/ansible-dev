@@ -21,7 +21,7 @@ sudo ./install.sh
 
 Please follow below links as per your OS
 
-[Ubuntu](docs/debian/README.md) | [Centos/RHEL](docs/rhel/README.md) | [MacOS](docs/MacOS/README.md)
+[Ubuntu](docs/debian/README.md) | [Centos](docs/rhel/README.md) | [MacOS](docs/MacOS/README.md)
 
 ## Example Usage
 
