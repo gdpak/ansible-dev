@@ -4,6 +4,7 @@ from ansible_dev.config_handler.config import ConfigHandler
 from ansible_dev.context_manager.context import Context
 from ansible_dev.ansible_play.ansible_player import AnsibleRunner
 import traceback
+import os
 from colorama import Fore, Back, Style
 
 class Config(object):
@@ -56,7 +57,8 @@ def init(config, path, venv_name, ansible_version, ansible_repo, python_version)
         return
     
     try:
-        workspace_section = 'workspace:' + str(path)
+        abs_path = os.path.abspath(path)
+        workspace_section = 'workspace:' + str(abs_path)
         kwargs = {}
         workspace_vars=dict(
             venv_name=venv_name,
